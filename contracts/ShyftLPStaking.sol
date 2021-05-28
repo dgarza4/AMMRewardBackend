@@ -88,9 +88,9 @@ contract ShyftLPStaking is Ownable {
         return _to.sub(_from);
     }
 
-    function pendingShyftReward(uint256 _poolId, address _user) external view returns (uint256) {
+    function pendingShyftReward(uint256 _poolId) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[_poolId];
-        UserInfo storage user = userInfo[_poolId][_user];
+        UserInfo storage user = userInfo[_poolId][msg.sender];
         uint256 accShyftPerShare = pool.accShyftPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (lpSupply < 0) {
@@ -102,9 +102,9 @@ contract ShyftLPStaking is Ownable {
         return user.amount.mul(accShyftPerShare).div(1e12).sub(user.rewardDebt);
     }
 
-    function harvest(uint256 _poolId, address _user) external returns (uint256) {
+    function harvest(uint256 _poolId) external returns (uint256) {
         PoolInfo storage pool = poolInfo[_poolId];
-        UserInfo storage user = userInfo[_poolId][_user];
+        UserInfo storage user = userInfo[_poolId][msg.sender];
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accShyftPerShare).div(1e12).sub(user.rewardDebt);
             safeShyftTransfer(msg.sender, pending);
