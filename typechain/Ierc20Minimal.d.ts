@@ -21,17 +21,11 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
-interface TestTokenInterface extends ethers.utils.Interface {
+interface Ierc20MinimalInterface extends ethers.utils.Interface {
   functions: {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "name()": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
@@ -45,21 +39,6 @@ interface TestTokenInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "transfer",
     values: [string, BigNumberish]
@@ -72,21 +51,6 @@ interface TestTokenInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
@@ -102,7 +66,7 @@ interface TestTokenInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export class TestToken extends Contract {
+export class Ierc20Minimal extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -141,7 +105,7 @@ export class TestToken extends Contract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<T & G>>>;
 
-  interface: TestTokenInterface;
+  interface: Ierc20MinimalInterface;
 
   functions: {
     allowance(
@@ -174,46 +138,6 @@ export class TestToken extends Contract {
       account: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    name(overrides?: CallOverrides): Promise<[string]>;
-
-    "name()"(overrides?: CallOverrides): Promise<[string]>;
-
-    symbol(overrides?: CallOverrides): Promise<[string]>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
@@ -273,46 +197,6 @@ export class TestToken extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  decimals(overrides?: CallOverrides): Promise<number>;
-
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-  decreaseAllowance(
-    spender: string,
-    subtractedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "decreaseAllowance(address,uint256)"(
-    spender: string,
-    subtractedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  increaseAllowance(
-    spender: string,
-    addedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "increaseAllowance(address,uint256)"(
-    spender: string,
-    addedValue: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  "name()"(overrides?: CallOverrides): Promise<string>;
-
-  symbol(overrides?: CallOverrides): Promise<string>;
-
-  "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   transfer(
     recipient: string,
     amount: BigNumberish,
@@ -370,46 +254,6 @@ export class TestToken extends Contract {
       account: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    decimals(overrides?: CallOverrides): Promise<number>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    name(overrides?: CallOverrides): Promise<string>;
-
-    "name()"(overrides?: CallOverrides): Promise<string>;
-
-    symbol(overrides?: CallOverrides): Promise<string>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -490,46 +334,6 @@ export class TestToken extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     transfer(
       recipient: string,
       amount: BigNumberish,
@@ -591,46 +395,6 @@ export class TestToken extends Contract {
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,

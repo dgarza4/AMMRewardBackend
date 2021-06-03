@@ -28,7 +28,6 @@ contract ShyftLPStaking is Ownable {
     }
 
     IERC20 public shyftTokenContract;
-    uint256 public shyftRewardPerBlock;
 
     PoolInfo[] public poolInfo;
     mapping (uint256 => mapping (address => UserInfo)) public userInfo;
@@ -46,7 +45,6 @@ contract ShyftLPStaking is Ownable {
         uint256 _startBlock
     ) public {
         shyftTokenContract = _shyftContractAddress;
-        shyftRewardPerBlock = _shyftPerBlock;
         startBlock = _startBlock;
     }
 
@@ -97,7 +95,7 @@ contract ShyftLPStaking is Ownable {
             return 0;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 shyftReward = multiplier.mul(shyftRewardPerBlock).mul(pool.perBlockShyftAllocated).div(totalAllocShyftPerBlock);
+        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated).mul(pool.perBlockShyftAllocated).div(totalAllocShyftPerBlock);
         accShyftPerShare = accShyftPerShare.add(shyftReward.mul(1e12).div(lpSupply));
         return user.amount.mul(accShyftPerShare).div(1e12).sub(user.rewardDebt);
     }
@@ -149,7 +147,7 @@ contract ShyftLPStaking is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 shyftReward = multiplier.mul(shyftRewardPerBlock).mul(pool.perBlockShyftAllocated).div(totalAllocShyftPerBlock);
+        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated).mul(pool.perBlockShyftAllocated).div(totalAllocShyftPerBlock);
         pool.accShyftPerShare = pool.accShyftPerShare.add(shyftReward.mul(1e12).div(lpSupply));
 
         pool.lastRewardBlock = block.number;
@@ -161,6 +159,7 @@ contract ShyftLPStaking is Ownable {
         UserInfo storage user = userInfo[_poolId][msg.sender];
         updatePool(_poolId);
         // if user already has LP tokens in the pool execute harvest for the user
+        console.log('deposit updated');
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accShyftPerShare).div(1e12).sub(user.rewardDebt);
             safeShyftTransfer(msg.sender, pending);

@@ -38,7 +38,6 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     "poolLength()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "set(uint256,uint256,bool)": FunctionFragment;
-    "shyftRewardPerBlock()": FunctionFragment;
     "shyftTokenContract()": FunctionFragment;
     "startBlock()": FunctionFragment;
     "totalAllocShyftPerBlock()": FunctionFragment;
@@ -106,10 +105,6 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     values: [BigNumberish, BigNumberish, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: "shyftRewardPerBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "shyftTokenContract",
     values?: undefined
   ): string;
@@ -174,10 +169,6 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "set", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "shyftRewardPerBlock",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "shyftTokenContract",
     data: BytesLike
@@ -400,10 +391,6 @@ export class ShyftLpStaking extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    shyftRewardPerBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "shyftRewardPerBlock()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     shyftTokenContract(overrides?: CallOverrides): Promise<[string]>;
 
     "shyftTokenContract()"(overrides?: CallOverrides): Promise<[string]>;
@@ -615,10 +602,6 @@ export class ShyftLpStaking extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  shyftRewardPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "shyftRewardPerBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   shyftTokenContract(overrides?: CallOverrides): Promise<string>;
 
   "shyftTokenContract()"(overrides?: CallOverrides): Promise<string>;
@@ -827,10 +810,6 @@ export class ShyftLpStaking extends Contract {
       _withUpdate: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    shyftRewardPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "shyftRewardPerBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     shyftTokenContract(overrides?: CallOverrides): Promise<string>;
 
@@ -1064,10 +1043,6 @@ export class ShyftLpStaking extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    shyftRewardPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "shyftRewardPerBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     shyftTokenContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     "shyftTokenContract()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1262,14 +1237,6 @@ export class ShyftLpStaking extends Contract {
       _shyftPerBlock: BigNumberish,
       _withUpdate: boolean,
       overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    shyftRewardPerBlock(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "shyftRewardPerBlock()"(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     shyftTokenContract(
