@@ -31,7 +31,6 @@ contract ShyftLPStaking is Ownable {
 
     PoolInfo[] public poolInfo;
     mapping (uint256 => mapping (address => UserInfo)) public userInfo;
-    uint256 public totalAllocShyftPerBlock = 0;
     uint256 public startBlock;
 
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
@@ -57,7 +56,6 @@ contract ShyftLPStaking is Ownable {
             massUpdatePools();
         }
         uint256 lastRewardBlock = block.number > startBlock ? block.number : startBlock;
-        totalAllocShyftPerBlock = totalAllocShyftPerBlock.add(_shyftPerBlock);
         poolInfo.push(PoolInfo({
             lpToken: _lpToken,
             perBlockShyftAllocated: _shyftPerBlock,
@@ -70,7 +68,6 @@ contract ShyftLPStaking is Ownable {
         if (_withUpdate) {
             massUpdatePools();
         }
-        totalAllocShyftPerBlock = totalAllocShyftPerBlock.sub(poolInfo[_poolId].perBlockShyftAllocated).add(_shyftPerBlock);
         poolInfo[_poolId].perBlockShyftAllocated = _shyftPerBlock;
     }
 
@@ -95,7 +92,7 @@ contract ShyftLPStaking is Ownable {
             return 0;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated).mul(pool.perBlockShyftAllocated).div(totalAllocShyftPerBlock);
+        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated);
         accShyftPerShare = accShyftPerShare.add(shyftReward.mul(1e12).div(lpSupply));
         return user.amount.mul(accShyftPerShare).div(1e12).sub(user.rewardDebt);
     }
@@ -147,7 +144,7 @@ contract ShyftLPStaking is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated).mul(pool.perBlockShyftAllocated).div(totalAllocShyftPerBlock);
+        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated);
         pool.accShyftPerShare = pool.accShyftPerShare.add(shyftReward.mul(1e12).div(lpSupply));
 
         pool.lastRewardBlock = block.number;

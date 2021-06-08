@@ -40,7 +40,6 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     "set(uint256,uint256,bool)": FunctionFragment;
     "shyftTokenContract()": FunctionFragment;
     "startBlock()": FunctionFragment;
-    "totalAllocShyftPerBlock()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updatePool(uint256)": FunctionFragment;
     "userInfo(uint256,address)": FunctionFragment;
@@ -113,10 +112,6 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "totalAllocShyftPerBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
@@ -174,10 +169,6 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "startBlock", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalAllocShyftPerBlock",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -399,12 +390,6 @@ export class ShyftLpStaking extends Contract {
 
     "startBlock()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    totalAllocShyftPerBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalAllocShyftPerBlock()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides
@@ -610,10 +595,6 @@ export class ShyftLpStaking extends Contract {
 
   "startBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-  totalAllocShyftPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalAllocShyftPerBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
-
   transferOwnership(
     newOwner: string,
     overrides?: Overrides
@@ -818,10 +799,6 @@ export class ShyftLpStaking extends Contract {
     startBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
     "startBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalAllocShyftPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalAllocShyftPerBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -1051,10 +1028,6 @@ export class ShyftLpStaking extends Contract {
 
     "startBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalAllocShyftPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalAllocShyftPerBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides
@@ -1250,14 +1223,6 @@ export class ShyftLpStaking extends Contract {
     startBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "startBlock()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalAllocShyftPerBlock(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "totalAllocShyftPerBlock()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,

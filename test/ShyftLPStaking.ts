@@ -1,9 +1,10 @@
 import { expect } from "chai";
-import { ethers, waffle } from 'hardhat'
+import { ethers, waffle, network } from 'hardhat'
 import { Ierc20, ShyftLpStaking, TestErc20 } from "../typechain";
 import { shyftLPStakingTestFixture } from './shared/fixtures'
 
-const { time } = require('@openzeppelin/test-helpers');
+import { time } from '@openzeppelin/test-helpers'
+
 
 const createFixtureLoader = waffle.createFixtureLoader
 
@@ -19,7 +20,8 @@ describe("Shyft Staking", function() {
   const rewardPerBlock = 10;
 
   const timeTravel = async (seconds: Number) => {
-    await time.increase(seconds)
+    await network.provider.send("evm_increaseTime", [seconds])
+    await network.provider.send("evm_mine") // this one will have 02:00 PM as its timestamp
   }
 
   before('create fixture loader', async () => {
@@ -35,8 +37,15 @@ describe("Shyft Staking", function() {
 
   it("deposit/withdraw", async function() {
     await lpToken.connect(alice).approve(shyftLpStaking.address, ethers.utils.parseEther('10000'));
+    await lpToken.connect(bob).approve(shyftLpStaking.address, ethers.utils.parseEther('10000'));
     await shyftLpStaking.connect(alice).deposit(0, 100);
     await shyftLpStaking.connect(bob).deposit(0, 200);
-    expect((await shyftContract.balanceOf(shyftLpStaking.address))).to.be.eq(300)
+    expect(await lpToken.balanceOf(shyftLpStaking.address)).to.be.eq(300)
+    expect(await shyftLpStaking.connect(alice).pendingShyftReward(0)).to.be.eq(10)
+    expect(await shyftLpStaking.connect(bob).pendingShyftReward(0)).to.be.eq(0)
+
+    await timeTravel(10);
+    expect(await shyftLpStaking.connect(bob).pendingShyftReward(0)).to.be.eq(Math.trunc(10 / 3 * 2))
+    expect(await shyftLpStaking.connect(alice).pendingShyftReward(0)).to.be.eq(Math.trunc(10 / 3 + 10))
   });
 });
