@@ -25,6 +25,5 @@ export const shyftLPStakingTestFixture = async function() {
     const { token0: shyftContract, lpToken, rewardToken } = await tokensFixture()
     const currentBlockNumber = ethers.provider.getBlockNumber()
     const shyftLpStaking = (await shyftLPStakingFactory.deploy(shyftContract.address, 100, currentBlockNumber)) as ShyftLpStaking
-
     return { shyftLpStaking, lpToken, rewardToken, shyftContract }
 }

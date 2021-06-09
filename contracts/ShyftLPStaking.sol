@@ -156,7 +156,6 @@ contract ShyftLPStaking is Ownable {
         UserInfo storage user = userInfo[_poolId][msg.sender];
         updatePool(_poolId);
         // if user already has LP tokens in the pool execute harvest for the user
-        console.log('deposit updated');
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accShyftPerShare).div(1e12).sub(user.rewardDebt);
             safeShyftTransfer(msg.sender, pending);
