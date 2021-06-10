@@ -3,9 +3,6 @@ import { ethers, waffle, network } from 'hardhat'
 import { Ierc20, ShyftLpStaking, TestErc20 } from "../typechain";
 import { shyftLPStakingTestFixture } from './shared/fixtures'
 
-import { time } from '@openzeppelin/test-helpers'
-
-
 const createFixtureLoader = waffle.createFixtureLoader
 
 describe("Shyft Staking", function() {
@@ -41,26 +38,48 @@ describe("Shyft Staking", function() {
   it("deposit/withdraw", async function() {
     await lpToken.connect(alice).approve(shyftLpStaking.address, ethers.utils.parseEther('100'));
     await lpToken.connect(bob).approve(shyftLpStaking.address, ethers.utils.parseEther('200'));
+    const initialBlockNumber =  await ethers.provider.getBlockNumber();
     await shyftLpStaking.connect(alice).deposit(0, 100);
     await shyftLpStaking.connect(bob).deposit(0, 200);
     expect(await lpToken.balanceOf(shyftLpStaking.address)).to.be.eq(300)
-    expect(await shyftLpStaking.connect(alice).pendingShyftReward(0)).to.be.eq(10)
-    expect(await shyftLpStaking.connect(bob).pendingShyftReward(0)).to.be.eq(0)
-
+    // time travel
     await timeTravel(10);
-    expect(await shyftLpStaking.connect(bob).pendingShyftReward(0)).to.be.eq(Math.trunc(10 / 3 * 2))
-    expect(await shyftLpStaking.connect(alice).pendingShyftReward(0)).to.be.eq(Math.trunc(10 / 3 + 10))
+    
+    let currentBlockNumber = await ethers.provider.getBlockNumber();
+    // Calculation logic
+    // RPB(reward per block) : 10
+    // duration: currentBlockNumber - initialBlockNumber + 1
+    //
+    // |block number 13--------|block number 14-------------------------|block number 15----------------------------
+    // |alice deposit 100------|bob deposit 200-------------------------|calculate reward for alice and bob-----------------------------
+    //
+    // alice's reward = RPB[as alice was the only guy staking] * (block number 13 - block number 14) +
+    //                RPB*(alice deposit amount / total liquidity)[both bob and alice staking from block 14] * (14 - 13)
+    // bob's reward   = RPB*(bob deposit amount / total liquidity)[both bob and alice staking from block 14] * (14 - 13)
+    // 
+    // alice's reward = (10 * 1) + ((10 / 3) * 1) = 13
+    // bob's reward   =            ((10 / 3) * 2) * 1 = 6
+    expect(await shyftLpStaking.connect(alice).pendingShyftReward(0)).to.be.eq(13)
+    expect(await shyftLpStaking.connect(bob).pendingShyftReward(0)).to.be.eq(6)
 
     // harvest check
-
+    // block number increased so by following above logic
+    // alice's reward = 16
     await shyftLpStaking.connect(alice).harvest(0);
-    expect(await shyftContract.balanceOf(alice.address)).to.be.eq(Math.trunc(10));
-    await timeTravel(10);
+    expect(await shyftContract.balanceOf(alice.address)).to.be.eq(16);
+    // harvest check
+    // block number increased so by following above logic
+    // bob's reward = 13
     await shyftLpStaking.connect(bob).harvest(0);
-    expect(await shyftContract.balanceOf(bob.address)).to.be.eq(6);
-    
+    expect(await shyftContract.balanceOf(bob.address)).to.be.eq(19);
+
+    // withdraw check
+
     await shyftLpStaking.connect(alice).withdraw(0, 100);
     expect(await lpToken.balanceOf(alice.address)).to.be.eq(ethers.utils.parseEther('100'));
+    
+    await shyftLpStaking.connect(bob).withdraw(0, 200);
+    expect(await lpToken.balanceOf(bob.address)).to.be.eq(ethers.utils.parseEther('200'));
 
   });
 });

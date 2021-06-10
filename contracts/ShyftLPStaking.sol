@@ -88,18 +88,19 @@ contract ShyftLPStaking is Ownable {
         UserInfo storage user = userInfo[_poolId][msg.sender];
         uint256 accShyftPerShare = pool.accShyftPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
-        if (lpSupply < 0) {
-            return 0;
+        if (block.number > pool.lastRewardBlock && lpSupply != 0) {
+            uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
+            uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated);
+            accShyftPerShare = accShyftPerShare.add(shyftReward.mul(1e12).div(lpSupply));
         }
-        uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 shyftReward = multiplier.mul(pool.perBlockShyftAllocated);
-        accShyftPerShare = accShyftPerShare.add(shyftReward.mul(1e12).div(lpSupply));
         return user.amount.mul(accShyftPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     function harvest(uint256 _poolId) external returns (uint256) {
         PoolInfo storage pool = poolInfo[_poolId];
         UserInfo storage user = userInfo[_poolId][msg.sender];
+        updatePool(0);
+        console.log('currentBlock', block.number, pool.accShyftPerShare);
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(pool.accShyftPerShare).div(1e12).sub(user.rewardDebt);
             safeShyftTransfer(msg.sender, pending);
@@ -152,6 +153,7 @@ contract ShyftLPStaking is Ownable {
 
     // Deposit LP tokens to Contract for RIO allocation.
     function deposit(uint256 _poolId, uint256 _amount) public {
+        console.log('currentBlock', block.number);
         PoolInfo storage pool = poolInfo[_poolId];
         UserInfo storage user = userInfo[_poolId][msg.sender];
         updatePool(_poolId);
