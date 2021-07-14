@@ -15,11 +15,20 @@ async function main() {
 
   // We get the contract to deploy
   const ShyftLPStaking = await hre.ethers.getContractFactory("ShyftLPStaking");
-  const shyftLPStaking = await ShyftLPStaking.deploy("0x89Ea73272c1c88041D08C222Fac2961836aB3dDc", "100000", "9999999");
+  const shyftLPStaking = await ShyftLPStaking.deploy("0xcba3eae7f55d0f423af43cc85e67ab0fbf87b61c", "100000", "8780600");
 
   await shyftLPStaking.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log("ShyftStakingContract deployed to:", shyftLPStaking.address);
+
+  // await hre.run("verify:verify", {
+  //   address: shyftLPStaking.address,
+  //   constructorArguments: [
+  //     "0xcba3eae7f55d0f423af43cc85e67ab0fbf87b61c",
+  //     "100000",
+  //     "8788888",
+  //   ],
+  // })
 }
 
 // We recommend this pattern to be able to use async/await everywhere

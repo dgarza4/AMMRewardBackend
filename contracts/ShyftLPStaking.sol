@@ -71,7 +71,8 @@ contract ShyftLPStaking is Ownable {
         poolInfo[_poolId].perBlockShyftAllocated = _shyftPerBlock;
     }
 
-    function fund(address _from, uint256 _amount) public {
+    function fund(uint256 _amount) public {
+        address _from = address(msg.sender);
         require(_from != address(0), 'fund: must pass valid _from address');
         require(_amount > 0, 'fund: expecting a positive non zero _amount value');
         require(shyftTokenContract.balanceOf(_from) >= _amount, 'fund: expected an address that contains enough Shyft for Transfer');
@@ -153,7 +154,6 @@ contract ShyftLPStaking is Ownable {
 
     // Deposit LP tokens to Contract for RIO allocation.
     function deposit(uint256 _poolId, uint256 _amount) public {
-        console.log('currentBlock', block.number);
         PoolInfo storage pool = poolInfo[_poolId];
         UserInfo storage user = userInfo[_poolId][msg.sender];
         updatePool(_poolId);

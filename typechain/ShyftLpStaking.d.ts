@@ -26,7 +26,7 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     "add(uint256,address,bool)": FunctionFragment;
     "deposit(uint256,uint256)": FunctionFragment;
     "emergencyWithdraw(uint256)": FunctionFragment;
-    "fund(address,uint256)": FunctionFragment;
+    "fund(uint256)": FunctionFragment;
     "getLockedShyftView()": FunctionFragment;
     "getLpSupply(uint256)": FunctionFragment;
     "getMultiplier(uint256,uint256)": FunctionFragment;
@@ -58,10 +58,7 @@ interface ShyftLpStakingInterface extends ethers.utils.Interface {
     functionFragment: "emergencyWithdraw",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "fund",
-    values: [string, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: "fund", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "getLockedShyftView",
     values?: undefined
@@ -271,13 +268,11 @@ export class ShyftLpStaking extends Contract {
     ): Promise<ContractTransaction>;
 
     fund(
-      _from: string,
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "fund(address,uint256)"(
-      _from: string,
+    "fund(uint256)"(
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
@@ -476,13 +471,11 @@ export class ShyftLpStaking extends Contract {
   ): Promise<ContractTransaction>;
 
   fund(
-    _from: string,
     _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "fund(address,uint256)"(
-    _from: string,
+  "fund(uint256)"(
     _amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
@@ -680,14 +673,9 @@ export class ShyftLpStaking extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    fund(
-      _from: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    fund(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    "fund(address,uint256)"(
-      _from: string,
+    "fund(uint256)"(
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -928,14 +916,9 @@ export class ShyftLpStaking extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    fund(
-      _from: string,
-      _amount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    fund(_amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
 
-    "fund(address,uint256)"(
-      _from: string,
+    "fund(uint256)"(
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
@@ -1111,13 +1094,11 @@ export class ShyftLpStaking extends Contract {
     ): Promise<PopulatedTransaction>;
 
     fund(
-      _from: string,
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "fund(address,uint256)"(
-      _from: string,
+    "fund(uint256)"(
       _amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;

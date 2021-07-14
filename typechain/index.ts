@@ -2,14 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Ownable } from "./Ownable";
-export type { Ierc20Metadata } from "./Ierc20Metadata";
 export type { Ierc20 } from "./Ierc20";
 export type { Ierc20Minimal } from "./Ierc20Minimal";
 export type { TestErc20 } from "./TestErc20";
 export type { ShyftLpStaking } from "./ShyftLpStaking";
 
 export { Ownable__factory } from "./factories/Ownable__factory";
-export { Ierc20Metadata__factory } from "./factories/Ierc20Metadata__factory";
 export { Ierc20__factory } from "./factories/Ierc20__factory";
 export { Ierc20Minimal__factory } from "./factories/Ierc20Minimal__factory";
 export { TestErc20__factory } from "./factories/TestErc20__factory";
